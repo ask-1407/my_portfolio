@@ -1,6 +1,10 @@
 # ディレクトリ構成
 root/
-　├ yyyy/
-　│　└ competiton_name/
-　│　 └ solution.ipynb/
-　│　 └ README.md/
+　├ competiton/
+　│ 　└ yyyy/
+　│  　└ competiton_name/
+　│   　 └ solution.ipynb/
+　│ 　   └ README.md/
+　├ leetcode/
+　│ 　└ Problem_name
+　│ 　  └ solution.py
