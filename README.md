@@ -1,4 +1,5 @@
 # ディレクトリ構成
+```
 root/
 　├ competiton/
 　│ 　└ yyyy/
@@ -8,3 +9,4 @@ root/
 　├ leetcode/
 　│ 　└ Problem_name
 　│ 　  └ solution.py
+```
