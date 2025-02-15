@@ -52,3 +52,23 @@ for i in range(len(snacks)):
     name = item[0]
     calories = item[1]
     print(f"#{i+1}: {name} has {calories} carolies")
+
+
+# 項目7 rangeではなくenumerateを使う
+
+"""
+組み込み関数enumerateは遅延評価ジェネレータでイテレータをラップする.
+ループのインデックスとイテレータの次の値をyieldする。
+enumerateにてyieldされる各対はfor文でうまくアンパックできる。
+rangeとlenを組み合わせて書くよりも関係に書くことが可能。
+また，enumerateの第二引数でカウンタを開始する数を指定できる。
+"""
+
+flavor_list = ["valilla", "chocolate", "pecan", "strawberry"]
+for i in range(len(flavor_list)):
+    flavor = flavor_list[i]
+    print(f"{i+1}: {flavor}")
+
+
+for i, flavor in enumerate(flavor_list,i):
+    print(f"{i}: {flavor}")
