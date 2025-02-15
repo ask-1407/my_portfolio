@@ -65,10 +65,36 @@ rangeとlenを組み合わせて書くよりも関係に書くことが可能。
 """
 
 flavor_list = ["valilla", "chocolate", "pecan", "strawberry"]
+for i, flavor in enumerate(flavor_list,i):
+    print(f"{i}: {flavor}")
+
+# rangeを利用する場合の書き方
 for i in range(len(flavor_list)):
     flavor = flavor_list[i]
     print(f"{i+1}: {flavor}")
 
 
-for i, flavor in enumerate(flavor_list,i):
-    print(f"{i}: {flavor}")
+
+# 項目8 イテレータを並列に処理するにはzipを使う
+
+"""
+組み込み関数zipは２つ以上のイテレータを遅延評価ジェネレータでラップする。
+zipジェネレータは各イテレータから次の値のタプルをyieldし，for文の内側で直接アンパックできる。
+zipはラップしているイテレータを一つずつ処理するので無限に長い入力でもメモリがクラッシュせず利用可能。
+ただし，長さが異なる場合は短いほうに合わせられるので注意が必要。zip_lonestを使えば長いほうに合わせられる。
+"""
+
+names = ['Cecilia', 'Lise', 'Marie']
+counts = [len(n) for n in names]
+
+# zipによるイテレート ※長さは短いほうに合わせられる
+for name, count in zip(names, counts):
+    if count > max_count:
+        longest_name = name
+        max_count = count
+
+# zip_longestの場合
+from itertools import zip_longest
+names.append('Rosalind')
+for name, count in zip_longest(names, count):
+    print(f"{name}: {count}")
