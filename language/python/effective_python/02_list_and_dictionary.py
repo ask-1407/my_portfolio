@@ -76,4 +76,18 @@ x = w.encode('utf-8')
 y = x[::-1]
 z = y.decode('utf-8') # UnicodeDecodeError: 'utf-8' codec can't decode byte 0x9d in position 0: invalid start byte
 
+# ストライドとスライスを同時に利用すると紛らわしくなる.
+# できる限りストライドは制の値にし，startとendは省略する。
+# 3つ全ての引数を使うときは2回のスライスを使うか，itertools.isliceを使う
+
+# anti-pattern
+x = ['a','b','c','d','e','f','g','h']
+x[2::2] # ['c','e','g']
+x[-2::-2] # ['g','e','c','a']
+x[-2:2:-2] # ['g','e']
+x[2:2:-2] # []
+
+# good
+y = x[::2] # ['a','c','e','g']
+z = x[1::2] # ['b','d','f','h']
 
