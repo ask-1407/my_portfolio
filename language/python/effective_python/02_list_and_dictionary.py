@@ -60,3 +60,20 @@ print('After b', b) # aと同じ内容の同じリスト
 一つのスライスにstart，end，strideを一緒に使わない。
 3つ全てが必要なときには代入を2度使うか組み込みモジュールのitertools.isliceを利用する。
 """
+
+# somelist[start:end:stride]という形式でスライスの増分を定義できる
+x = ['red','orange','yellow','green','blue','indigo','violet']
+odds = x[::2] # 奇数のみを取得
+evens = x[1::2] # 偶数のみを取得
+print(odds) # ['red', 'yellow', 'blue', 'violet']
+print(evens) # ['orange', 'green', 'indigo']
+
+# ストライドは予期せぬ振る舞いを引き起こすことがある
+# UTF-8バイト文字列で符号化したUnicodeではエラーが発生する
+
+w = '寿司'
+x = w.encode('utf-8')
+y = x[::-1]
+z = y.decode('utf-8') # UnicodeDecodeError: 'utf-8' codec can't decode byte 0x9d in position 0: invalid start byte
+
+
