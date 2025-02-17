@@ -33,3 +33,21 @@ print('Before:  ', a) # Before:   ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 a[2:7] = [99, 22, 14]
 print('After:   ', a) # After:   ['a', 'b', 99, 22, 14, 'h']
 
+# 代入リストがスライスより長いとリストが長くなる。
+print('Before ', 1) # Before  ['a', 'b', 99, 22, 14, 'h']
+a[2:3] = [47, 11]
+print('After', a) # After ['a', 'b', 47, 11, 22, 14, 'h']
+
+# スライスのときにstartとendを共に省略するともとのリストの複製となる
+b = a[:]
+assert b == a and b is not a
+
+# startもendもないスライスに代入を行うと参照していたリストの複製を使って内容が置き換わる。
+b = a
+print('Before a', a) # Before a ['a', 'b', 47, 11, 22, 14, 'h']
+print('Before b', b) # Before b ['a', 'b', 47, 11, 22, 14, 'h']
+
+a[:] = [101, 102, 103]
+assert a is b # まだ同じリストオブジェクト
+print('After a', a) # 内容はいまでは変わっている
+print('After b', b) # aと同じ内容の同じリスト
