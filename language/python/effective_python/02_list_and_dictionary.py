@@ -98,10 +98,20 @@ z = x[1::2] # ['b','d','f','h']
 リストを重複の内容に分割する場合，catch-allアンパックはスライスやインデックスを使うよりもエラーの危険が少ない。
 """
 
-# アンパックを行うにはアンパックするシーケンスの長さが必要
+# アンパックを行うにはアンパックするシーケンスの長さが必要. 
 car_ages = [0,9,4,8,7,20,19,1,6,15]
 car_ages_descending = sorted(car_ages, reverse=True)
 oldest, second_oldest = car_ages_descending # ValueError: too many values to unpack (expected 2)
+
+# 以下のようにインデックスやスライスを使いたくなるが読みづらい. 変数の値が変わったときにシーケンスの更新が必要。
+oldest = car_ages_descending[0]
+second_oldest = car_ages_descending[1]
+others = car_ages_descending[2:]
+print(oldest, second_oldest, others) # 20 19 [15, 9, 8, 7, 6, 4, 1, 0]
+
+# このような状況ではアスタリスク付きの引数によるcatch-allアンパックを使うことで同様の結果が得られる。
+oldest, second_oldest, *others = car_ages_descending
+print(oldest, second_oldest, others) # 20 19 [15, 9, 8, 7, 6, 4, 1, 0]
 
 
 # 項目14 key引数を使い複雑な基準でソートする
