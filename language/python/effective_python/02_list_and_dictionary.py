@@ -127,6 +127,19 @@ print(youngest, second_youngest, others) # 0 1 [20, 19, 15, 9, 8, 7, 6, 4]
 # 一つのアンパックパターンの中に複数のアスタリスク付きの式を指定することもできない
 first, *middle, *second_middle, last = [1,2,3,4] # SyntaxError: two starred expressions in assignment
 
+# アンパックされる複数のレベルがある構造の中の異なる部分に対してcatch-allアンパックをする場合は複数のアスタリスク付きの式があってもよい。
+# 以下のコードは筆者としては非推奨だが，理解できればアンパック代入におけるアスタリスク付きの式の振る舞いを理解できる。
+car_inventory = {
+    'Downtown': ('Silver Shadow', 'Pinto', 'DMC'),
+    'Airport': ('Skyline', 'Viper', 'Gremlin', 'Nova'),
+}
+((loc1, (best1, *rest1)),
+(loc2, (best2, *rest2))) = car_inventory.items()
+print(f'Best at {loc1} is {best1}, {len(rest1)} others') # Best at Downtown is Silver Shadow, 2 others
+print(f'Best at {loc2} is {best2}, {len(rest2)} others') # Best at Airport is Skyline, 3 others
+
+
+
 # 項目14 key引数を使い複雑な基準でソートする
 """
 list型のsortメソッドはリストの内容を文字列，整数，タプルなどの自然な順序で並べ替えるのに使える。
