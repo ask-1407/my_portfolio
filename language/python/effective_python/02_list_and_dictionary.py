@@ -113,6 +113,19 @@ print(oldest, second_oldest, others) # 20 19 [15, 9, 8, 7, 6, 4, 1, 0]
 oldest, second_oldest, *others = car_ages_descending
 print(oldest, second_oldest, others) # 20 19 [15, 9, 8, 7, 6, 4, 1, 0]
 
+# アスタリスク付きの引数はどこにでも書くことができる
+oldest, *others, youngest = car_ages_descending
+print(oldest, youngest, others) # 20 0 [19, 15, 9, 8, 7, 6, 4, 1]
+
+*others, second_youngest, youngest = car_ages_descending
+print(youngest, second_youngest, others) # 0 1 [20, 19, 15, 9, 8, 7, 6, 4]
+
+
+# アスタリスク付きの式を含むアンパック代入では少なくとも一つ指定部分が必要。
+*others = car_ages_descending # SyntaxError: starred assignment target must be in a list or tuple
+
+# 一つのアンパックパターンの中に複数のアスタリスク付きの式を指定することもできない
+first, *middle, *second_middle, last = [1,2,3,4] # SyntaxError: two starred expressions in assignment
 
 # 項目14 key引数を使い複雑な基準でソートする
 """
