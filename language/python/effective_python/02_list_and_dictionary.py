@@ -172,3 +172,36 @@ key関数でtupleを返すことにより複数のソート基準を組み合わ
 マイナス演算子を使えない型ではsortメソッドを様々なkey関数とreverse値に対して，
 最も低いランクのsort呼び出しから最も高いランクのsort呼び出しまでの順に複数回呼び出すことで組み合わせたソートができる。
 """
+
+# listには要素の順序に従って整列するsortメソッドが存在する。
+numbers = [93, 86, 11, 68, 70]
+numbers.sort()
+print(numbers) # [11, 68, 70, 86, 93]
+
+# オブジェクトに対してsortメソッドを適用してもエラーが発生する。
+# 理由はクラスで定義されていない比較のための特殊メソッド(__lt__ メソッド)をsortメソッドが呼び出すため。
+class Tool:
+    def __init__(self, name, weight):
+        self.name = name
+        self.weight = weight
+
+    def __repr__(self):
+        return f'Tool({self.name!r}, {self.weight})'
+    
+tools = [
+    Tool('level', 3.5),
+    Tool('hammer', 1.25),
+    Tool('screwdriver', 0.5),
+    Tool('chisel', 0.25),
+]
+
+tools.sort() # TypeError: '<' not supported between instances of 'Tool' and 'Tool'
+
+# sortメソッドは関数を引数として期待するkeyパラメータが使える。以下はToolsのname属性を使ってソートする例。
+print('Unsorted:', tools) # Unsorted: [Tool('level', 3.5), Tool('hammer', 1.25), Tool('screwdriver', 0.5), Tool('chisel', 0.25)]
+tools.sort(key = lambda x: x.name)
+print('Sorted:', tools) # Sorted: [Tool('chisel', 0.25), Tool('hammer', 1.25), Tool('level', 3.5), Tool('screwdriver', 0.5)]
+
+# 重さ(weight)でもソート可能。
+tools.sort(key = lambda x: x.weight)
+print('By weight:', tools) # By weight: [Tool('chisel', 0.25), Tool('screwdriver', 0.5), Tool('hammer', 1.25), Tool('level', 3.5)]
