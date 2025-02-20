@@ -96,6 +96,7 @@ z = x[1::2] # ['b','d','f','h']
 代入のアンパックでアスタリスク付きの式を使い，アンパックするパターンの残りをまとめてリストにできる
 アスタリスク月の式はどこにでも書くことができ，常に受け取る値のリストになる
 リストを重複の内容に分割する場合，catch-allアンパックはスライスやインデックスを使うよりもエラーの危険が少ない。
+ただしアスタリスク付きの式は常にリストを返すので，イテレータのアンパックは結果が全てメモリに収まる場合に利用すること。
 """
 
 # アンパックを行うにはアンパックするシーケンスの長さが必要. 
@@ -138,6 +139,28 @@ car_inventory = {
 print(f'Best at {loc1} is {best1}, {len(rest1)} others') # Best at Downtown is Silver Shadow, 2 others
 print(f'Best at {loc2} is {best2}, {len(rest2)} others') # Best at Airport is Skyline, 3 others
 
+# アスタリスク付きの式はlistインスタンスになり，アンパックされるシーケンス要素がない場合は空のリストになる。
+short_list = [1,2]
+first, second, *rest = short_list
+print(first, second, rest) # 1 2 []
+
+# アンパック構文をイテレータでアンパックすることもできる。
+def generate_csv():
+    yield ('Date', 'Make', 'Model', 'Year', 'Price')
+    yield ('2020-10-10', 'Toyota', 'Corolla', 2019, 20000)
+    yield ('2020-10-11', 'Honda', 'Civic', 2017, 15000)
+
+it = generate_csv()
+header, *rows = it # アスタリスク付きの式によりヘッダーをイテレータの残りと別々に処理できる
+print('CSV Header:', header) # CSV Header: ('Date', 'Make', 'Model', 'Year', 'Price')
+print('Row count:', len(rows))  # Row count: 2
+
+# インデックスとスライスをりようしてジェネレータの結果を処理することもできるが行が複数になり見た目が複雑になる。
+all_csv_rows = list(generate_csv())
+header = all_csv_rows[0]
+rows = all_csv_rows[1:]
+print('CSV Header:', header) # CSV Header: ('Date', 'Make', 'Model', 'Year', 'Price')
+print('Row count:', len(rows))  # Row count: 2
 
 
 # 項目14 key引数を使い複雑な基準でソートする
