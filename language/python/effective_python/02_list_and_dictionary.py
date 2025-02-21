@@ -205,3 +205,10 @@ print('Sorted:', tools) # Sorted: [Tool('chisel', 0.25), Tool('hammer', 1.25), T
 # 重さ(weight)でもソート可能。
 tools.sort(key = lambda x: x.weight)
 print('By weight:', tools) # By weight: [Tool('chisel', 0.25), Tool('screwdriver', 0.5), Tool('hammer', 1.25), Tool('level', 3.5)]
+
+# 文字列のような基本型ならソートの前に値の変換ができる。
+places = ['home', 'work', 'New York', 'Paris']
+places.sort()
+print('Case sensitive:', places) # Case sensitive: ['New York', 'Paris', 'home', 'work']
+places.sort(key = lambda x :x.lower())
+print('Case insensitive:', places) # Case insensitive: ['home', 'New York', 'Paris', 'work']
