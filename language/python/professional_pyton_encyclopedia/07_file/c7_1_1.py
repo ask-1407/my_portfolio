@@ -57,3 +57,16 @@ with open('test.txt','r') as f:
 with open('test.txt', 'r') as f:
     f.seek(5)
     print(f.read(1)) # output B
+
+# 書き込みと読み込みを同時に行うときにはモードを'w+'と指定する。
+# 'w+'でファイルをopenするとファイルを開いた直後は中身が空になっているので注意。
+with open('test.txt', 'w+') as f:
+    f.write(s)
+    f.seek(0) # 書き込み後はファイルの位置が最後になっているので先頭に戻す。
+    print(f.read())
+
+# 'r+'でopenしたときは最初のファイルが読み込めないとエラーになる。
+with open('test2.txt','r+') as f:
+    print(f.read()) # FileNotFoundError: [Errno 2] No such file or directory: 'test2.txt' 
+    f.seek(0)
+    f.write(s)
