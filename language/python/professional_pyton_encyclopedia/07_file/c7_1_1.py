@@ -38,3 +38,22 @@ with open('test.txt', 'r') as f:
         print(line, end='') # デフォルトでは改行込み
         if not line: # 読み込む行がないと空
             break
+
+# read()メソッドを利用すると、指定した塊毎に読むこともできる。
+with open('test.txt', 'r') as f:
+    while True:
+        chunk = 2
+        line = f.read(chunk)
+        print(line)
+        if not line:
+            break
+
+# tellメソッドを使うと現在ファイル内のどの場所を指しているかがわかる。
+with open('test.txt','r') as f:
+    print(f.tell())  # output : 0
+    print(f.read(1)) # output :A
+
+# seekメソッドを使うとファイルの特定の場所に移動できる。
+with open('test.txt', 'r') as f:
+    f.seek(5)
+    print(f.read(1)) # output B
