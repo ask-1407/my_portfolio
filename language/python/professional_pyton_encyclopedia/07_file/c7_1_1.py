@@ -12,3 +12,29 @@ f.close()
 f = open('test.txt','a+')
 f.write('Test')
 f.close()
+
+# with文を使えばcloseの記述が不要。open()を利用した際はclose()がないと閉じ忘れとなる。
+with open('test.txt','w') as f:
+    f.write('Test')
+
+
+s = """\
+AAA
+BBB
+CCC
+DDD
+"""
+with open('test.txt','w') as f:
+    f.write(s)
+
+# 引数'r'を指定するとファイルの中身を読み込み変数に格納することができる。
+with open('test.txt', 'r') as f:
+    print(f.read())
+
+# readlineメソッドとwhileループで一行ずつ読み込むことができる
+with open('test.txt', 'r') as f:
+    while True:
+        line = f.readline()
+        print(line, end='') # デフォルトでは改行込み
+        if not line: # 読み込む行がないと空
+            break
