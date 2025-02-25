@@ -240,10 +240,16 @@ print(power_tools) # [Tool('drill', 4), Tool('sander', 4), Tool('circular saw', 
 power_tools.sort(key = lambda x: (x.weight, x.name), reverse = True)
 print(power_tools) # [Tool('drill', 4), Tool('sander', 4), Tool('circular saw', 5), Tool('jackhammer', 40)]
 
+# 数値についてはマイナス単項演算子でソートの昇順・降順を反転できる。コード量が少ないので推奨。
+power_tools.sort(key = lambda x: (-x.weight, x.name))
+print(power_tools) # [Tool('jackhammer', 40), Tool('circular saw', 5), Tool('drill', 4), Tool('sander', 4)]
+
+# ただし全ての型には使えない。
+power_tools.sort(key=lambda x:(x.weight, -x.name), reverse=True) # TypeError: bad operand type for unary -: 'str'
+
+# list型のsortメソッドはKey関数が互いが等しいという値を返したときは入力のリストでの順番を保持する
+power_tools.sort(key = lambda x: x.name) # 名前昇順
+power_tools.sort(key = lambda x: x.weight, reverse=True) # 重さ降順
+print(power_tools) # [Tool('jackhammer', 40), Tool('circular saw', 5), Tool('drill', 4), Tool('sander', 4)]
 
 
-
-
-
-
-  
