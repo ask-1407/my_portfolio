@@ -212,3 +212,38 @@ places.sort()
 print('Case sensitive:', places) # Case sensitive: ['New York', 'Paris', 'home', 'work']
 places.sort(key = lambda x :x.lower())
 print('Case insensitive:', places) # Case insensitive: ['home', 'New York', 'Paris', 'work']
+
+# tupleはデフォルトで比較可能で，sortメソッドが必要とする__lt__のような特殊メソッドをもつ
+saw = (5, 'circular saw')
+jackhammer = (40, 'jackhammer')
+assert not (jackhammer < saw) # 期待通り
+
+drill = (4, 'drill')
+sander = (4, 'sander')
+assert  drill[0] == sander[0] # 同じ重さ
+assert  drill[1] < sander[1] # 英字順で小さい
+assert  drill < sander # 先頭要素から評価する。
+
+# 
+power_tools = [
+    Tool('drill', 4),
+    Tool('circular saw', 5),
+    Tool('jackhammer', 40),
+    Tool('sander', 4),
+]
+
+# 以下のコードではtupleの比較方式を利用して，工具の重さ順でソートする。
+power_tools.sort(key = lambda x: (x.weight, x.name))
+print(power_tools) # [Tool('drill', 4), Tool('sander', 4), Tool('circular saw', 5), Tool('jackhammer', 40)]
+
+# Key関数でtupleを返す場合，ソートの方向がすべて同じ方向である必要がある。
+power_tools.sort(key = lambda x: (x.weight, x.name), reverse = True)
+print(power_tools) # [Tool('drill', 4), Tool('sander', 4), Tool('circular saw', 5), Tool('jackhammer', 40)]
+
+
+
+
+
+
+
+  
