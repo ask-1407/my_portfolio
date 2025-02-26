@@ -252,4 +252,37 @@ power_tools.sort(key = lambda x: x.name) # 名前昇順
 power_tools.sort(key = lambda x: x.weight, reverse=True) # 重さ降順
 print(power_tools) # [Tool('jackhammer', 40), Tool('circular saw', 5), Tool('drill', 4), Tool('sander', 4)]
 
+# 項目15 dictの挿入順序に依存する場合は注意する
+"""
+- Python3.7以降はdictインスタンスの内容をイテレーションするとキーが最初に挿入された順番が保持される。
+- Pythonではdictインスタンスではないが辞書のように振る舞うオブジェクトを定義できる。
+- 辞書的クラスでの注意事項は3つ。①挿入順序に依存しないコードを書く，②実行時にdict型か明示的にチェックする，③型ヒントと静的解析でチェックする
+"""
 
+# Python3.7以降ではdictの挿入順序が保持される
+baby_names = {
+    'cat': 'kitten',
+    'dog': 'puppy',
+}
+print(baby_names) # {'cat': 'kitten', 'dog': 'puppy'}
+print(list(baby_names.keys())) # ['cat', 'dog']
+
+# Pythonでは標準プロトコルをエミュレートするコンテナ型を定義できる。
+# Pythonは動的型付け言語であるため殆どのコードは厳格なクラス階層に基づく代わりに，オブジェクトの振る舞いがデファクトの型にもとづくダックタイピングに依存している。
+votes = {
+    'otter': 1281,
+    'polar bear': 587,
+    'fox': 863,
+}
+
+# 
+def populate_ranks(votes, ranks):
+    """投票データを処理して動物の順位を空の辞書に登録する"""
+
+    names = list(votes.keys())
+    names.sort(key = votes.get, reverse = True)
+    for i, name in enumerate(names, 1):
+        ranks[name] = i
+
+def get_winner(ranks):
+    return next(iter(ranks))
