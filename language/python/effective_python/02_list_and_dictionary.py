@@ -384,3 +384,37 @@ counters[key] = count + 1
 # getメソッドを用いるとはるかに短くてすむ. 単純な型の辞書ならこれがもっともよい。
 count = counters.get(key, 0)
 counters[key] = count + 1
+
+# 辞書がリストのような複雑な場合を考える
+votes = {
+    'baguette': ['Bob', 'Alice'],
+    'ciabatta': ['Coco', 'Deb'],
+}
+
+# in式を使う場合キーがある場合には2回アクセス，ない場合はアクセスと代入が1回ずつ必要
+key = 'brioche'
+who = 'Elmer'
+if key in votes:
+    names = votes[key]
+else:
+    votes[key] = names = []
+names.append(who)
+print(votes)
+
+# ValueがリストのときにもKeyError例外は有効。
+# キーがあれば1回のアクセス，なければアクセス・代入が一回ずつなので効率がよい。
+try:
+    names = [votes]
+except KeyError:
+    votes[key] = names = []
+
+# getメソッドでもよい
+names = votes.get(key)
+if names is None:
+    votes[key] = names = []
+names.append(who)
+
+# walrus演算子を利用するとさらに短くできる
+if (names := votes.get(key)) is None:
+    votes[key] = names = []
+names.append(who)
