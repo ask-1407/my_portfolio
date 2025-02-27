@@ -278,7 +278,6 @@ votes = {
 # 
 def populate_ranks(votes, ranks):
     """投票データを処理して動物の順位を空の辞書に登録する"""
-
     names = list(votes.keys())
     names.sort(key = votes.get, reverse = True)
     for i, name in enumerate(names, 1):
@@ -286,3 +285,70 @@ def populate_ranks(votes, ranks):
 
 def get_winner(ranks):
     return next(iter(ranks))
+
+ranks = {}
+populate_ranks(votes, ranks)
+print(ranks) # {'otter': 1, 'fox': 2, 'polar bear': 3}
+winner = get_winner(ranks)
+print(winner) 
+
+# collections.abcをつかって新たな辞書クラスを作り英字順にイテレートする
+from collections.abc import MutableMapping
+class SortedDict(MutableMapping):
+    def __init__(self):
+        self.data = {}
+
+    def __getitem__(self, key):
+        return self.data[key]
+    
+    def __setitem__(self, key, value):
+        self.data[key] = value
+    
+    def __delitem__(self, key):
+        del self.data[key]
+
+    def __iter__(self):
+        keys = list(self.data.keys())
+        keys.sort()
+        for key in keys:
+            yield key
+    
+    def __len__(self):
+        return len(self.data)
+
+# get_winner()の実装が辞書のイテレーションで挿入順序がpopulate_ranlsに一致していると仮定しているため所望の結果にはならない。
+sorted_ranks = SortedDict()
+populate_ranks(votes,sorted_ranks)
+print(sorted_ranks.data)
+winner  = get_winner(sorted_ranks) # {'otter': 1, 'fox': 2, 'polar bear': 3}
+print(winner) # 'fox'
+
+# 解決方法1 get_winner関数を再実装してranks辞書が特定のイテレーション順になっていることを仮定しない。
+def get_winner(ranks):
+    for name, ranks in ranks.items():
+        if rank == 1:
+            return name
+        
+winner = get_winner(sorted_ranks)
+print(winner) # otter
+
+# 解決方法2 関数の先頭でranksの型が期待通りかをチェックして，そうでないなら例外をだす。
+def get_winner(ranks):
+    if not isinstance(ranks, dict):
+        raise TypeError('must provide a dict instance')
+    return next(iter(ranks))
+
+get_winner(sorted_ranks) # TypeError: must provide a dict instance'
+
+# 解決方法3 型ヒントを使ってget_winnerに渡される値がdictインスタンスで辞書的な振る舞いをするMutableMappingでないことを確認する
+from typing import Dict, MutableMapping
+def populate_ranks(votes: Dict[str, int], ranks:Dict[str, int]) -> None:
+    names = list(votes.keys())
+    names.sort(key=votes.get, reverse=True)
+    for i, name in enumerate(names, 1):
+        ranks[name] = i
+
+def get_winner(ranks: Dict[str, int]) -> str:
+    return next(iter(ranks))
+
+# $python3 -m mypy --strict example.py
