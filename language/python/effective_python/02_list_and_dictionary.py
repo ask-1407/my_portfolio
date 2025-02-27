@@ -418,3 +418,28 @@ names.append(who)
 if (names := votes.get(key)) is None:
     votes[key] = names = []
 names.append(who)
+
+# setdefaultを使うと更に簡潔にかける。
+names = votes.setdefault(key,[]) # 辞書のキーを取得し，キーがないときは該当キーにデフォルト値を割り当てる。
+names.append(who)
+
+# ただし，setdefaultという名前からは値を取得することが判別できずPythonに詳しくない人にはわかりづらい。
+# また，setdefaultに渡されるデフォルト値は欠損キーの場合は辞書に複製されるのではなく直接代入される
+data = {}
+key = 'foo'
+value = []
+data.setdefault(key,value)
+print('Before:', data) # Before: {'foo': []}
+value.append('hello')
+print('After:', data) # After: {'foo': ['hello']}
+
+# setdefaultはどんなキーであっても新たにデフォルト値を作成しておかなければならない。呼び出すたびに作成するのでパフォーマンス上のオーバーヘッドになる
+# 欠損した辞書キーを扱うのにsetdefaultが最短となるのは「デフォルト値の作成が安価で変更可能かつ例外の起こる可能性がない」ときに限り（e.g. list)
+# なお，defaultdictのほうがよい。（詳細は後述）
+
+# 項目17 内部状態の欠損要素を扱うにはsetdefaultではなくdefaultdictを扱う。
+"""
+辞書を作って任意のキー集合を処理するとき，collectionsモジュールのdefaultdictを使う。
+辞書のキーを指定されその要素を自分で作成することができない状況ならgetを使って要素にアクセスする。
+より短いコードになるsetdefaultの使用を検討することもある。
+"""
