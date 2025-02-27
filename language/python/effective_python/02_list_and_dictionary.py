@@ -352,3 +352,35 @@ def get_winner(ranks: Dict[str, int]) -> str:
     return next(iter(ranks))
 
 # $python3 -m mypy --strict example.py
+
+# 項目16 辞書の欠損キーの処理にはgetを使う
+"""
+辞書の欠損キーを検出するにはin式，KeyError例外，getメソッド，setdefaultメソッドが使える。
+getメソッドはカウンタのような基本的な型からなる辞書が最適。
+辞書の値の生成コストがかかる場合や例外が送出される可能性がある場合は代入式と一緒に使うのが望ましい。
+dictのsetdefaultが最良と思われる場合はdefaultdictを使うことを検討する。
+"""
+
+counters = {
+    'pumpernickel': 2,
+    'sourdough': 1,
+}
+
+# ifでキーが存在する場合にTrueを返すin式を使う。
+key = 'what'
+if key in counters:
+    count = counters[key]
+else:
+    count = 0
+counters[key] = count + 1
+
+# KeyError例外を送出する方法でもできる。一回だけアクセスするので効率がいい。
+try:
+    count = counters[key]
+except KeyError:
+    count = 0
+counters[key] = count + 1
+
+# getメソッドを用いるとはるかに短くてすむ. 単純な型の辞書ならこれがもっともよい。
+count = counters.get(key, 0)
+counters[key] = count + 1
