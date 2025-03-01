@@ -12,5 +12,5 @@ root/
 　├ language/ # 言語学習用
 　│ 　└ language_name
 　│ 　  └ material_name
-　│ 　    └ xxx.py # 
+　│ 　    └ xxx
 ```
