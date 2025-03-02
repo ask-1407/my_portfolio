@@ -524,7 +524,20 @@ else:
     handle.seek(0)
     image_data = handle.read()
     
-# 同じロジックをdefaultdictを用いて実装してみる
+# 同じロジックをdefaultdictを用いて実装
+# 問題点：defaultdictがコンストラクタに渡される関数には引数がないと仮定している。
+# defaultdictが呼び出すヘルパー関数にはどのキーがアクセスしているか不明ということになるので，open呼び出しができない。
+from collections import defaultdict
+def open_picture(profile_path):
+    try:
+        return open(profile_path, 'a+b')
+    except OSError:
+        print(f'Failed to open path {profile_path}')
+        raise
+
+pictures = defaultdict(open_picture)
+handle = pictures[path]
+handle.seek(0) # >>>TypeError : open_picture missing 1 requierd positional argument 'profile_path'
 
 
 
