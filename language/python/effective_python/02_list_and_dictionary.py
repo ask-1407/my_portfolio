@@ -443,3 +443,20 @@ print('After:', data) # After: {'foo': ['hello']}
 辞書のキーを指定されその要素を自分で作成することができない状況ならgetを使って要素にアクセスする。
 より短いコードになるsetdefaultの使用を検討することもある。
 """
+
+visits = {
+    'Mexico': {'Tulum', 'Puerto Vallarta'},
+    'Japan': {'Hakone'},
+}
+
+# setdefaultを使って新たな要素を集合に追加することができる。
+visits.setdefault('France', set()).add('Arles')
+
+if (japan := visits.get('Japan') ) is None:
+    visits['Japan'] = japan = set()
+japan.add('Kyoto')
+
+print(visits) # {'Mexico': {'Tulum', 'Puerto Vallarta'}, 'Japan': {'Kyoto', 'Hakone'}, 'France': {'Arles'}}
+
+
+
