@@ -458,5 +458,19 @@ japan.add('Kyoto')
 
 print(visits) # {'Mexico': {'Tulum', 'Puerto Vallarta'}, 'Japan': {'Kyoto', 'Hakone'}, 'France': {'Arles'}}
 
+# 自作の場合でも同様のことができる。
+# 注意点：この実装例では呼び出しのたびに新たなsetインスタンスを作っているので非効率。
+class Visits:
+    def __init__(self):
+        self.data = {}
 
+    def add(self, country, city): # 上述の例をヘルパーメソッドでラップしている
+        city_set = self.data.setdefault(country, set())
+        city_set.add(city)
 
+visits = Visits()
+visits.add('Russia','Yekaterinburg')
+visits.add('Tanzania','Zanzibar')
+print(visits.data) # >>> {'Russia': {'Yekaterinburg'}, 'Tanzania': {'Zanzibar'}}
+
+# 
