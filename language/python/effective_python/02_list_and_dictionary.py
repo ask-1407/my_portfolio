@@ -539,6 +539,17 @@ pictures = defaultdict(open_picture)
 handle = pictures[path]
 handle.seek(0) # >>>TypeError : open_picture missing 1 requierd positional argument 'profile_path'
 
+# dict型のサブクラスかつ特殊メソッド__missing__を利用して欠損キーを補える
+class Pictures(dict):
+    def __missing__(self, key): # キーのpathが辞書にないことがわかると呼び出される
+        value = open_picture(key)
+        self[key] = value
+        return value
+
+pictures = Pictures()
+handle = pictures[path]
+handle.seek(0)
+image_data = handle.read()
 
 
 
