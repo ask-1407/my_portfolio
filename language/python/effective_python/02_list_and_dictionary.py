@@ -487,5 +487,46 @@ visits.add('England', 'Bath')
 visits.add('England', 'London')
 print(visits.data) # >>> defaultdict(<class 'set'>, {'England': {'Bath', 'London'}})
 
+# 項目18 __missing__でキー依存デフォルト値を作成する方法を把握しておく
+"""
+dictのsetdefaultメソッドはデフォルト値作成が高コスト・例外が発生する場合はさけるべき
+defaultdictに渡される関数には引数が渡せず，アクセスするキーに依存するデフォルト値が使えない。
+メソッド__misiing__をもつdictサブクラスを定義してどのキーをアクセスしているかがわかるデフォルト値を作ることができる。
+"""
+
+# setdefault，defaultdictどちらも正解ではない場合がある。
+
+# 以下のコードをベースとする。
+pictures = {}
+path = 'profile_1234.png'
+
+if (handle := pictures.get(path)) is None:
+    try:
+        handle = open(path, 'a+b')
+    except OSError:
+        print(f'Faild to open path {path}')
+        raise
+    else:
+        pictures[path] = handle
+
+handle.seek(0)
+image_data = handle.read()
+
+# setdefaultメソッドを利用した場合。
+# open関数が常に呼ばれるようになっているため追加のファイルハンドルが同じプログラムにある既存のオープンハンドルと混乱する危険がある。
+# 例外の発生時に，setdefault呼び出しによるものかopenのものかが区別できない可能性がある。
+try:
+    handle = pictures.setdefault(path, open(path, 'a+b'))
+except OSError:
+    print(f'Failed to oepn path {path}')
+    raise
+else:
+    handle.seek(0)
+    image_data = handle.read()
+    
+# 同じロジックをdefaultdictを用いて実装してみる
+
+
+
 
 
