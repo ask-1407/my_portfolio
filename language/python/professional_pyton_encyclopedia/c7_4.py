@@ -7,3 +7,13 @@ with tempfile.TemporaryFile(mode='w+') as t:
     t.seek(0)
     print(t.read())
 
+# 実際に一時ファイルを作成したいときはNamedTemporaryFile関数を使う
+with tempfile.NamedTemporaryFile(delete=False) as t:
+    print(t.name) # 一時ファイルのパスを取得
+    with open(t.name, 'w') as f:
+        f.write('test')  
+
+# 一時ディレクトリを作成するにはTemporaryDirectory関数を使う
+with tempfile.TemporaryDirectory() as td:
+    print(td) # 一時ディレクトリのパスを取得
+temp_dir = tempfile.mkdtemp()
