@@ -17,3 +17,9 @@ with tempfile.NamedTemporaryFile(delete=False) as t:
 with tempfile.TemporaryDirectory() as td:
     print(td) # 一時ディレクトリのパスを取得
 temp_dir = tempfile.mkdtemp()
+
+# 標準ライブラリのsuboprocessを使うとターミナル用のコマンドをPython上で実行できる。
+import subprocess
+subprocess.run(['ls', '-l'])
+
+
