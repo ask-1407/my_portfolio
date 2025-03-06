@@ -22,4 +22,6 @@ temp_dir = tempfile.mkdtemp()
 import subprocess
 subprocess.run(['ls', '-l'])
 
-
+# run関数に引数にshell=Trueを指定するとリストを使わずに文字列コマンドを実行できる。
+# LinuxやShellに詳しい人でないと難しいためコマンドがシンプルならリストを推奨する
+subprocess.run('ls -al', shell=True)
