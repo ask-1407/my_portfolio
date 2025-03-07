@@ -25,3 +25,15 @@ subprocess.run(['ls', '-l'])
 # run関数に引数にshell=Trueを指定するとリストを使わずに文字列コマンドを実行できる。
 # LinuxやShellに詳しい人でないと難しいためコマンドがシンプルならリストを推奨する
 subprocess.run('ls -al', shell=True)
+
+# check=Trueを指定するとコマンドが正常に終了しなかった場合に例外を発生させる。
+# リストに格納する方法ならPythonで例外が発生するのでそちらのほうがよい
+
+subprocess.run('lsa', shell=True, check=True) # CallProcessError
+
+# コマンドをリストに格納しつつパイプを使うにはPopenを使う
+p1 = subprocess.Popen(['ls', '-l'], stdout=subprocess.PIPE)
+p2 = subprocess.Popen(['grep', 'py'], stdin=p1.stdout, stdout=subprocess.PIPE)
+p1.stdout.close()
+output = p2.communicate()[0]
+print(output)
