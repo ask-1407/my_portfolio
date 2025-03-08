@@ -6,7 +6,6 @@ if is_ok: # 0以外の数値ならTrueとなる
 else:
     print('NO')
 
-
 is_ok = ''
 
 if is_ok: # 空の文字列ならFalse
@@ -22,3 +21,11 @@ if is_empty is None: # Noneであることを判定
 
 if is_empty is not None: # Noneでないことを判定
     print('None')
+
+# 複数のリストをまとめるときにはZIP関数が使える
+days = ['Mon', 'Tue', 'Wed']
+fruits = ['apple','banana','beer']
+drinks = ['coffee', 'tea', 'beer']
+
+for day, fruit, drink in zip[days, fruits, drinks]:
+    print(day, fruit, drink)
