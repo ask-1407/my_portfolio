@@ -37,3 +37,23 @@ p2 = subprocess.Popen(['grep', 'py'], stdin=p1.stdout, stdout=subprocess.PIPE)
 p1.stdout.close()
 output = p2.communicate()[0]
 print(output)
+
+# 時間にまつわるライブラリとバックアップファイル
+
+import datetime
+now = datetime.datetime.now()
+print(now) # 2025-03-08 07:06:39.778548
+print(now.isoformat()) # 2025-03-08T07:06:39.778548
+
+# strftimeで表示形式をある程度設定可能
+now = datetime.datetime.now()
+print(now)
+d = datetime.timedelta(weeks=-1)
+print(now+d)
+
+# time.sleepで指定した時間なにもしない
+import time
+time.sleep(2)
+
+# time.time()でエポックタイムを表示できる
+print(time.time())
