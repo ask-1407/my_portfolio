@@ -46,3 +46,12 @@ r = sample_func(100)
 print(r)
 # この関数にxとlを両方渡すと動作する。
 
+# 関数に引数に*をつけるアンパッキングができる
+def say_something(word, *args):# キーワード引数と位置引数は同時に利用できる
+    print('word = ', word)
+    for arg in args:
+        print(arg)
+
+say_something('Hi','Mike', 'Nancy') 
+t = ('Mike', 'Nancy')
+say_something('Hi',*t) #　アンパッキング
