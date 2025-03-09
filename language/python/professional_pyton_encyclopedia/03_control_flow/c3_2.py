@@ -29,3 +29,20 @@ drinks = ['coffee', 'tea', 'beer']
 
 for day, fruit, drink in zip[days, fruits, drinks]:
     print(day, fruit, drink)
+
+# デフォルト引数でリストや辞書を使うときの注意事項
+"""
+空のリストをデフォルト引数で使いたいときはNoneを指定する。
+関数の中でリストの変数がNoneである場合は初期化を行う。
+これはリストが参照渡しであるため、複数回実行すると同じリストのアドレスが参照されてしまうためである。
+"""
+def sample_func(x, l=[]): #　リストlにxをappendする関数
+    if l is None:
+        l = [] # ここがないと複数回呼び出したときにバグの温床になる
+    l.appemd(x)
+    return l
+
+r = sample_func(100)
+print(r)
+# この関数にxとlを両方渡すと動作する。
+
