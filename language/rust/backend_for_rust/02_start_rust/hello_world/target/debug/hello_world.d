@@ -1,0 +1,1 @@
+C:\Users\a1s4u\my_portfolio\language\rust\backend_for_rust\02_start_rust\hello_world\target\debug\hello_world.exe: C:\Users\a1s4u\my_portfolio\language\rust\backend_for_rust\02_start_rust\hello_world\src\main.rs
