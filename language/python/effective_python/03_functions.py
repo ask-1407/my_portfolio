@@ -55,11 +55,81 @@ def get_stats(numbers):
 
     return minimum, maximum, average, median, count
 
+# 項目20 Noneを返すのではなく例外を送出する。
+"""
+- Noneを返して特別な意味を示す変数はNoneと他の値とが全て条件式においてFalseに評価されるため，エラーを引き起こしやすい。
+- Noneを返す代わりに例外を送出することで特別な条件を示すようにする。
+- 型ヒントを使って関数が特別な場合にもで絶対にNoneを返さないことを明示できる。
+"""
+
+# 例えば以下のようなある数を別の数で割るヘルパー関数を考える。
+def careful_divide(a,b):
+    try:
+        return a/b
+    except ZeroDivisionError:
+        return None
+
+# この関数を使うコードは戻りに応じて振る舞いを変える
+x, y = 1, 0
+result = careful_divide(x, y)
+if result is None:
+    print('Invalid inputs')
+
+# ただし分子がゼロの場合を考えると面倒なことになる。
+x, y = 0, 5
+result = careful_divide(x, y)
+if not result:
+    print('Invalid inputs') # 返り値がNoneで上述のifがFalseと判定されてしまい，ここの出力がされてしまう。
+
+# このようなエラーを減らす方法は2つある。
+# 1: 戻り値を2値のタプルにする。第一項は演算の成功・失敗を，第二稿は計算された実際の結果を返す。
+
+def careful_divide(a,b):
+    try:
+        return True, a/b
+    except ZeroDivisionError:
+        return False, None
+
+# この関数の返り値はタプルをアンパックする必要があるため，除算の結果だけでなく状態をい考慮させることができる。 
+success, result = careful_divide(x, y)
+if not success:
+    print('Invalid inputs')
+
+# しかし，呼び出し元がタプルの最初の部分を無視することができるので抜け穴になっている。
+_, result = careful_divide(x, y)
+if not result:
+    print('Invalid inputs')
 
 
-        
+# 2: 特別な場合にはそもそもNoneを返さず例外を呼び出し元に送出する。
+def careful_divide(a,b):
+    try:
+        return a/b
+    except ZeroDivisionError as e:
+        raise ValueError('Invalid inputs') 
 
-            
+x,y = 5, 2
+try:
+    result = careful_divide(x, y)
+except ValueError:
+    print('Invalid inputs')
+else:
+    print('Result is %.1f' % result) # Result is 2.5
+
+# この方法は型ヒントを使ったコードにも拡張できる。
+
+def careful_divide(a: float, b: float) -> float:
+    """Divides a by b.
+    
+    Raises:
+        ValueError: When inputs cannot be divided.
+    """
+    try:
+        return a/b
+    except ZeroDivisionError as e:
+        raise ValueError('Invalid inputs')
+
+
 
 
 
