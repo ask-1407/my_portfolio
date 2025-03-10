@@ -116,8 +116,7 @@ except ValueError:
 else:
     print('Result is %.1f' % result) # Result is 2.5
 
-# この方法は型ヒントを使ったコードにも拡張できる。
-
+# この方法は型ヒントを使ったコードにも拡張できる。入力・出力・例外が明確になり呼び出し元を間違える回数がかなり減る。
 def careful_divide(a: float, b: float) -> float:
     """Divides a by b.
     
@@ -129,8 +128,31 @@ def careful_divide(a: float, b: float) -> float:
     except ZeroDivisionError as e:
         raise ValueError('Invalid inputs')
 
+# 項目21 クロージャが変数スコープとどう関わるかを把握する。
+"""
+クロージャ関数は定義されたスコープのどれからでも変数を参照できる。
+デフォルトではクロージャ内での変数への代入は外部のスコープには影響しない
+nonlocal文を用いて，クローじゅあが外のスコープにある変数を修正できる
+nonlocal文を単純な関数でのみ使う要にする
+"""
 
+def sort_priority(values, group):# 一部の数を優先してソートする。
+    def helper(x):
+        if x in group:
+            return(0, x)
+        return (1, x)
+    values.sort(key = helper)
 
+numbers = [8, 3, 1, 2, 5, 4, 7, 6]
+group = [2, 3, 5, 7]
+sort_priority(numbers, group) # >>> [2, 3, 5, 7, 1, 4, 6, 8]
+
+# この関数が期待通りに動く理由
+"""
+Pythonがクロージャ(定義されたスコープの変数を参照する関数)をサポートしている
+Pythonでは関数がファーストクラスオブジェクトである＝直接参照でき，変数に代入したり他の関数に引数として渡せる。
+Pythonはタプルを含めたシーケンスの比較に特別な規則を持つ。
+"""
 
 
             
