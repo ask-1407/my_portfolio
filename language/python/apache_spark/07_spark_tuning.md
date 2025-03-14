@@ -51,13 +51,35 @@ Sparkでリソースの枯渇やパフォーマンスの低下によるジョブ
   - データフロー量が不均一なストリーミングもしくはオンデマンドのデータ分析でピーク時に大量のSQLクエリを要するときに有効
   - `spark.dynamicAllocation`という値を設定することで利用可能。デフォルトでは`spark.dynamicAllocation = False`となっている。
 - ExecutorのメモリとShuffleサービスの設定
-  - 単に動的リソース割り当てを有効にするだけでは不十分。
-  - Executorがメモリ不足に陥ったり，JVM GCに悩まされたりしないようにExecutorのメモリがどのように配置・使用されているかを理解する必要がある。
+  - 単に動的リソース割り当てを有効にするだけでは不十分。Executorがメモリ不足に陥ったり，JVM GCに悩まされたりしないようにExecutorのメモリがどのように配置・使用されているかを理解する必要がある。
   - `spark.executor.memory`でExecutorのメモリを制御できる
     - 実行メモリ，ストレージメモリ，予約メモリの3つに分かれている。デフォルトでは60%,40％となっており300MBの予約メモリを確保している。
     - 実行メモリはSparkの`shuffle`,`join`,`sort`,`aggregation`に使用される。
     - `spark.memory.fraction`の値(デフォルト0.6)を変えると実行メモリの割り振りを調整できるが，クエリによって必要なメモリ量が異なるので実行メモリに割り当てる適切な値をチューニングするのは難しい。
-    - ストレージメモリは主にユーザーのデータ構造やDataFrameから長谷井したpartitionのcacheに使用できる。
+    - ストレージメモリは主にユーザーのデータ構造やDataFrameから派生したpartitionのcacheに使用できる。
+    - `map`と`shuffle`の操作中，Sparkはローカルディスクのshuffleファイルへの書き込みと読み取りを行うため激しいI/O操作が発生する。デフォルトのconfigは大規模なSpark Jobに最適でないためボトルネックになる可能性がある。以下の設定をみるとよし
+
+| Configuration | 説明 |
+| ---- | ---- |
+| spark.driver.memory | Spark DriverがExecuterからデータを受け取るために割り当てられるメモリ量 |
+| spark.shuffle.file.buffer | shuffle時にデータをバッファリングする一時的なメモリ領域サイズ。推奨1MB |
+| spark.file.transferTo | false に設定するとSpark はファイルバッファを使用してファイルを転送し、最終的にディスクに書き込むため結果的にI/O 活動を減少させる. |
+| spark.shuffle.unsafe.file.output.buffer | Shuffle中にファイルをMergeする際に可能なバッファリング量を制御する。 |
+| spark.io.compression.lz4.blockSize | ブロックの圧縮サイズを大きくすることでshuffleファイルのサイズを小さくできる。<br>デフォルト32KBだが512KBまで増やせる。 |
+| spark.shuffle.service.index.cache.size | シャッフル処理におけるインデックスファイルの読み取りに使うメモリの割り当て量を調整する<br>インデックスファイルはどのデータがどこに保存されているかを保持しているもので，タスクがこれを参照すると必要なデータがどこにあるかを特定できる |
+| spark.shuffle.registration.timeout | 外部シャッフルサービスへの登録のタイムアウト。デフォルトは5000㎳で12000㎳まで増やせる。 |
+| spark.shuffle.registration.maxAttempts | 外部シャッフルサービスへの登録に失敗した場合、maxAttempts回数だけリトライする。デフォルト3で5マデ増やせる |
+
+
+
+
+
+
+
+
+
+
+
 
 
 
