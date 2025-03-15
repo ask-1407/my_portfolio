@@ -136,12 +136,12 @@ nonlocal文を用いて，クローじゅあが外のスコープにある変数
 nonlocal文を単純な関数でのみ使う要にする
 """
 
-def sort_priority(values, group):# 一部の数を優先してソートする。
+def sort_priority(numbers, group):# 一部の数を優先してソートする。
     def helper(x):
         if x in group:
             return(0, x)
         return (1, x)
-    values.sort(key = helper)
+    numbers.sort(key = helper)
 
 numbers = [8, 3, 1, 2, 5, 4, 7, 6]
 group = [2, 3, 5, 7]
@@ -149,10 +149,59 @@ sort_priority(numbers, group) # >>> [2, 3, 5, 7, 1, 4, 6, 8]
 
 # この関数が期待通りに動く理由
 """
-Pythonがクロージャ(定義されたスコープの変数を参照する関数)をサポートしている
-Pythonでは関数がファーストクラスオブジェクトである＝直接参照でき，変数に代入したり他の関数に引数として渡せる。
-Pythonはタプルを含めたシーケンスの比較に特別な規則を持つ。
+1. Pythonがクロージャ(定義されたスコープの変数を参照する関数)をサポートしている
+2. Pythonでは関数がファーストクラスオブジェクトである＝直接参照でき，変数に代入したり他の関数に引数として渡せる。
+3. Pythonはタプルを含めたシーケンスの比較に特別な規則を持つ。
 """
 
+# 優先してほしい要素があったらフラグを立てるようにしたいとして，以下のように実装する。
+def sort_priority2(numbers, group):
+    found = False
+    def helper(x):
+        if x in group:
+            found = True
+            return(0, x)
+        return (1, x)
+    numbers.sort(key = helper)
+    return found
 
-            
+found = sort_priority2(numbers, group)
+print('Found:' found) # Found: false
+print(numbers) # >>> [2, 3, 5, 7, 1, 4, 6, 8]
+
+"""
+ソートした結果は正しいがフラグはFalseとなる。
+変数foundはhelper関数のスコープには存在しなかったため，Pythonが新たな変数として定義した。
+そのためsort_priority2関数の変数foundはFalseのままでReturnされた。
+一見面食らうが，スコープが定められているおかげで，ローカル変数が他から汚染されずにすんでいる。
+"""
+
+# Pythonではnonlocal文が指定した変数の代入に際してスコープ横断すべきことを示す。ただしモジュールレベルのスコープまではいかない。
+
+def sort_priority(numbers, group):
+    found = False
+    def helper(x):
+        nonlocal found # クロージャの外にあることを示す。ただし副作用の原因になるのでそこは注意。
+        if x in group:
+            found = True
+            return(0, x)
+    return(1, x)
+    numbers.sort(key = helper)
+    return found
+
+# nonlocalの使い方が複雑になってきたら状態をヘルパークラスでラップするとよい。
+
+class Sorter:
+    def __init__(self, group):
+        self.group = group
+        self.found = found
+    
+    def __call__(self, x):
+        if x in self.group:
+            self.found = True
+            return(0, x)
+    return(1, x)
+
+
+
+
