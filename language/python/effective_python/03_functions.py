@@ -190,7 +190,6 @@ def sort_priority(numbers, group):
     return found
 
 # nonlocalの使い方が複雑になってきたら状態をヘルパークラスでラップするとよい。
-
 class Sorter:
     def __init__(self, group):
         self.group = group
@@ -200,8 +199,71 @@ class Sorter:
         if x in self.group:
             self.found = True
             return(0, x)
-    return(1, x)
+        return(1, x)
+
+# 項目22 可変長位置帰趨を使って見た目をすっきりさせる。
+"""
+関数は" *args" を使うことで可変個数の位置引数を受け入れることができる。
+*演算子を関数に用いてシーケンスからの要素を位置引数とそして使える
+*演算子をジェネレータと一緒に使うとプログラムがメモリを使い果たしてクラッシュすることがある
+*argsを使う関数に新たに位置パラメータを追加すると 発見が困難なバグを生む可能性がある
+"""
+
+# 可変長位置引数を用いると関数呼び出しがより明確になる。
+
+# 以下の関数を題材にする。現状では，値がなくても空のリストを渡さないといけないのが面倒。
+def log(message,values):
+    if not values:
+        print(message)
+    else:
+        values_str = ','.join(str(x) for x in values)
+        print('My numbers are',[1,2])
+log('My numbers are', [1, 2]) # My numbers are: 1, 2
+log('Hi there', []) # Hi there
 
 
+# valuesを可変長位置引数とすると，それが実現できる。シーケンスでlogのような可変個引数関数を呼び出したいなら*演算子を使えば呼び出せる。
+def log(message,*values):
+    if not values:
+        print(message)
+    else:
+        values_str = ','.join(str(x) for x in values)
+        print('My numbers are',[1,2])
 
+log('My numbers are', 1, 2) # My numbers are: 1, 2
+log('Hi there') # Hi there
 
+# ただし注意点もある
+"""
+1. 可変個数の引数が関数に渡される前に常にタプルに変換される
+
+関数の呼び出し元がジェネレータで*演算子を使うと終わるまでイテレーションされる。
+結果のタプルにはすべてのジェネレータからの値が含まれるのでメモリを大量に消費してプログラムをクラッシュさせる。
+引数リストの入力個数が少ないことがわかっている場合が一番適している。
+"""
+
+def my_generator():
+    for i in range(10):
+        yield i
+
+def my_func(*args):
+    print(args)
+
+it = my_generator()
+my_func(*it) # >>> (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+"""
+2. 全ての呼び出し元を修正せずには関数に対して新たな位置引数を追加できない。
+
+"""
+def log(sequence, message, *values): # 
+    if not values:
+        print(f'{sepuence} - {message}')
+    else:
+        values_str = ','.join(str(x) for x in values)
+        print(f'{sepuence} - {message}: {values_str}')
+
+# 更新前の呼び出し方ではNG
+log('Favorite numbers', 7, 33) # >>> Favorite numbers -7:33 
+
+# 上記例の場合，例外を起こさずに実行続けるので探し出すのが困難。*argsを受け入れる関数を拡張したいときにはキーワード専用引数を使うとよい。
