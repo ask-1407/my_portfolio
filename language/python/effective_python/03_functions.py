@@ -267,3 +267,59 @@ def log(sequence, message, *values): #
 log('Favorite numbers', 7, 33) # >>> Favorite numbers -7:33 
 
 # 上記例の場合，例外を起こさずに実行続けるので探し出すのが困難。*argsを受け入れる関数を拡張したいときにはキーワード専用引数を使うとよい。
+
+# 項目23 キーワード引数にオプションの振る舞いを与える
+
+"""
+関数の引数は位置またはキーワードで指定でき，キーワード引数は各引数の目的を明らかにする。
+デフォルト値を設定したキーワード引数なら，呼び出し元を変更しなくてもその関数に新たな振る舞いを追加できる
+オプションのキーワード引数はキーワードで常に渡すべきである
+"""
+
+def remainder(number, divisor):
+    return number % divisor
+
+# OK
+assert remainder(20, 7) == 6
+assert remainder(number = 20, divisor=7) == 6
+assert remainder(20, divisor=7) == 6
+assert remainder(divisor=7, number = 20) == 6
+
+# NG. 位置引数はキーワード引数より前で指定する必要がある。
+assert remainder(number = 20, 7) == 6
+
+# 辞書と**演算子を使って関数の対応するキーワード引数として渡すこともできる
+my_kwargs = {
+    'number': 20,
+    'divisor': 7,
+}
+assert remainder(**my_kwargs) == 6
+
+# **演算子は位置引数と同時に利用することもできる
+my_kwargs = {'divisor': 7}
+assert remainder(number=20, **my_kwargs) == 6
+
+# 辞書のキーに重複がないなら，**演算子を複数併用することも可能。
+my_kwargs = {'number': 20,}
+other_kwargs = {'divisor': 7}
+assert remainder(**my_kwargs, **other_kwargs) == 6
+
+# キーワード引数の柔軟性の利点
+
+"""
+1. 関数呼び出しを初めて読む人にとってわかりやすくなる。
+remainder(20, 7)よりもremainder(number = 20, divisor=7)とするほうが引数の目的が明確になる。
+
+2. 関数定義においてデフォルト値を定義できる
+デフォルトの振る舞いをさせつつ，必要なときに追加の振る舞いを実施することができる。
+
+3. 既存の呼び出し元と後方互換性を保ちながら関数の引数を拡張できる。
+
+"""
+# 変更前
+def flow_rate(weight_diff, time_diff, period=1):
+    return(weight_diff / time_diff) * period
+
+# 変更後：unit_per_kg引数を追加
+def flow_rate(weight_diff, time_diff, period=1, unit_per_kg = 1):
+    return(weight_diff*unit_per_kg) / time_diff * period
