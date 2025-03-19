@@ -71,6 +71,17 @@ Sparkでリソースの枯渇やパフォーマンスの低下によるジョブ
 | spark.shuffle.registration.maxAttempts | 外部シャッフルサービスへの登録に失敗した場合、maxAttempts回数だけリトライする。デフォルト3で5マデ増やせる |
 
 
+- 並列処理の最大化
+  - Sparkの効率性は複数のTaskを大規模に系列に実行する能力に依存する。並列処理の性能最大化には「Sparkがストレージからデータをメモリに読み込む方法」「Sparkにとってのpartition」を理解する必要がある
+  - partition
+    - partitionとは，設定可能かつ読み取り可能な塊やブロックのサブセットに配置する方法のことをさす。 これらのデータセットは必要に応じてプロセス内の1つ以上のスレッドによって独立して並行して読み取りまたは処理ができる
+    - 大規模ワークロードの場合，Spark Jobは多くのStageを持ち，各Stageの中には多くのTaskが存在する。Sparkは1コアごと，Taskごとにスレッドをスケジュールし，各Taskは個別のparitionのデータを処理する
+    - 並列性を最大化するにはExecutorのコア数と同じ数のpartitionが理想的である。コア数より多くのpartitionがあると全てのコアがビジー状態になる。
+    - partitionは並列処理の最小単位ととらえることができる。1コアの1スレッドが1つのpartitionである
+    - partitionのサイズは`spark.sql.files.maxPartitionBytes`によって決定する。デフォルトは128MB。小さなpartitionファイルがたくさんあるとI/Oが異常に多くなりパフォーマンスが低下する(スモールファイル問題)
+  - shuffle partition
+    - shuffleステージで作成される。デフォルトでは`spark.sql.shuffle.partitions`で200に設定されている。データセットのサイズに応じてこの数を調整するとExecutorのタスクに送信される小さなpartitionの量を減らすことができる。
+    - 
 
 
 
