@@ -52,7 +52,6 @@ Sparkでリソースの枯渇やパフォーマンスの低下によるジョブ
   - `spark.dynamicAllocation`という値を設定することで利用可能。デフォルトでは`spark.dynamicAllocation = False`となっている。
 - ExecutorのメモリとShuffleサービスの設定
   - 単に動的リソース割り当てを有効にするだけでは不十分。Executorがメモリ不足に陥ったり，JVM GCに悩まされたりしないようにExecutorのメモリがどのように配置・使用されているかを理解する必要がある。
-  - `spark.executor.memory`でExecutorのメモリを制御できる
     - 実行メモリ，ストレージメモリ，予約メモリの3つに分かれている。デフォルトでは60%,40％となっており300MBの予約メモリを確保している。
     - 実行メモリはSparkの`shuffle`,`join`,`sort`,`aggregation`に使用される。
     - `spark.memory.fraction`の値(デフォルト0.6)を変えると実行メモリの割り振りを調整できるが，クエリによって必要なメモリ量が異なるので実行メモリに割り当てる適切な値をチューニングするのは難しい。
@@ -69,6 +68,7 @@ Sparkでリソースの枯渇やパフォーマンスの低下によるジョブ
 | spark.shuffle.service.index.cache.size | シャッフル処理におけるインデックスファイルの読み取りに使うメモリの割り当て量を調整する<br>インデックスファイルはどのデータがどこに保存されているかを保持しているもので，タスクがこれを参照すると必要なデータがどこにあるかを特定できる |
 | spark.shuffle.registration.timeout | 外部シャッフルサービスへの登録のタイムアウト。デフォルトは5000㎳で12000㎳まで増やせる。 |
 | spark.shuffle.registration.maxAttempts | 外部シャッフルサービスへの登録に失敗した場合、maxAttempts回数だけリトライする。デフォルト3で5マデ増やせる |
+    - データセットのサイズに応じてこの数を調整するとExecutorのタスクに送信される小さなpartitionの量を減らすことができる。
 
 
 - 並列処理の最大化
@@ -80,17 +80,36 @@ Sparkでリソースの枯渇やパフォーマンスの低下によるジョブ
     - partitionは並列処理の最小単位ととらえることができる。1コアの1スレッドが1つのpartitionである
     - partitionのサイズは`spark.sql.files.maxPartitionBytes`によって決定する。デフォルトは128MB。小さなpartitionファイルがたくさんあるとI/Oが異常に多くなりパフォーマンスが低下する(スモールファイル問題)
   - shuffle partition
-    - shuffleステージで作成される。デフォルトでは`spark.sql.shuffle.partitions`で200に設定されている。データセットのサイズに応じてこの数を調整するとExecutorのタスクに送信される小さなpartitionの量を減らすことができる。
-    - 
+    - shuffleステージで作成される。デフォルトでは`spark.sql.shuffle.partitions`で200に設定されている。
 
+# 7.2 データのcacheとpersistence
+- どちらもデータの永続化をサポートするAPI。頻繁にアクセスされるDataFrame，テーブルのパフォーマンス向上に寄与する
 
+## 7.2.1 DataFrame.cache()
+- `cache()`はSpark Executor間で読み込まれたpartitionをメモリが許す限り多く格納する
+- DataFrameは部分的にcacheできるがpartitionは部分的にcacheできない
+  - e.g.: 8つのpartitionがあり4.5個文のpartitionしか収まらない場合，4つがcacheされる
+  - なお全てのpartitionがcacheされないとpartitionの再計算が走るのでSparkのジョブが遅くなる。
+- アクションを呼び出すまで完全にcache化されない。※partitionも同様。
+  
+## 7.2.2 DataFrame.persist()
+- `cache()`よりも詳細に制御できる。StorageLevelを介してデータがどのようにcacheされるかを制御できる。
 
+| StorageLevel | 説明 |
+| ---- | ---- |
+|MEMORY_ONLY | データはオブジェクトとして直接格納されメモリに保存される |
+|MEMORY_ONLY_SER | データはコンパクトなバイト配列表現としてシリアライズされ，メモリに保存される |
+|MEMORY_AND_DISK | データはオブジェクトとして直接メモリに保存されるが，足りない場合は残りはシリアライズされてディスクに格納される |
+|DISK_ONLY | データはシリアライズされてディスクに保存される |
+|OFF_HEAP | データはオフヒープに格納される |
+|MEMORY_AND_DISK_SER | ディスクに格納されるときは常にシリアライズされる |
 
+## 7.2.3 cacheとpersistを行うべきケース
+- cacheの使用例
+  - クエリや変換のために大きなDatasetに繰り返しアクセスするようなパターン
 
-
-
-
-
-
+## 7.2.4 cacheとpersistを行うべきではないケース
+- メモリに収まり切らない大きさのDataFrame
+- 頻繁に使わないDataFrameに対して，サイズに関係なく安価なトランスフォームを行う
 
 
