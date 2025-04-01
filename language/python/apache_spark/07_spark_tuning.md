@@ -112,4 +112,41 @@ Sparkでリソースの枯渇やパフォーマンスの低下によるジョブ
 - メモリに収まり切らない大きさのDataFrame
 - 頻繁に使わないDataFrameに対して，サイズに関係なく安価なトランスフォームを行う
 
+# 7.3 SparkのJoinファミリー
+- Joinはデータ分析では非常に一般的なデータ操作で，Sparkでもinner join, outer, join, left join , right joinをサポートしている
+- これらの操作はExecutor間で大量のデータ移動を引き起こす。
 
+- Hash Join
+  - 概要
+    - テーブルA，Bのうち小さいほうの結合キーをハッシュテーブルとして持たせて探索・結合を行う
+    - 後述するBroadCast Hash Joinを理解するために，ここの仕組みを抑える必要がある。
+  - 詳細
+    - Build Phase：小さいテーブルをハッシュテーブルとしてメモリに格納
+    - Probe Phase：大きいテーブルをスキャンしてハッシュテーブルを使って結合する
+  - ポイント
+    - ハッシュテーブルなら計算量がO(1)になるのでそれぞれを一行ずつ探索するよりも早い
+    - joinキーが等値であるならば適している(a.key == b.key)
+    - 小さいテーブルがメモリに収まるかどうかがポイントとなる
+- BroadCastHashJoin
+  - 概要
+    - ノードごとにデータが分散している分散環境では通常のHashJoinではノード間でデータをやり取りする操作(シャッフル)が発生するが，これが処理速度低下の原因となる。
+    - これをイイ感じに解決したのがBroadCastJoin
+  - 詳細
+    - ステップ
+      -** 小さいテーブルを全ノードにコピー（ブロードキャスト）**し、各ノードがローカルでハッシュジョインを実行
+      - ブロードキャストされたテーブルを使って各ノードが並列でハッシュジョインをする
+      - 各ノードの計算結果を統合し，最終的な結果を得る
+    - 設定
+      - `spark.sql.autoBroadcastJoinThreshold`値に応じて実行される。デフォルト値は10で小さいデータセットが10MB未満の場合にbroadcast joinをする。
+      - なお`spark.sql.autoBroadcastJoinThreshold`=-1にすると常にShuffle Sort Merge Joinを行う。
+  - ポイント
+    - シャッフルが発生しないため処理速度が速い傾向。
+    - **Spark DriverとExecutorの双方で**小さいテーブルをメモリに保持するための十分なメモリがあるかをみておくこと
+    - `joined_sdf.explain(mode)` を実行することでどのようなjoinが行われたのかを確認することができる。
+    - 以下の条件を満たすとパフォーマンスがよくなる
+      - 結合したい各テーブルの各キーが同じpartitionにハッシュ化されている
+      - 片方のデータセットが他方よりはるかに小さい かつ `spark.sql.autoBroadcastJoinThreshold`の閾値以下
+      - 等価結合をする場合（これはHashJoinでも言われていること）
+![alt text](BroadCastHashJoin.png)
+
+## 7.3.2 Shuffle Sort Merge Join
