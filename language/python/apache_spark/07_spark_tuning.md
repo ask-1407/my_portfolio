@@ -183,3 +183,9 @@ Sparkでリソースの枯渇やパフォーマンスの低下によるジョブ
     - 結合キーの分布に偏りがあると並列処理の利点が失われ遅くなる。※特定のパーティションに偏ったキーのデータが集まりそこの処理が終わるまで待つことになってしまう。
     - `spark.sql.join.preferSortMergeJoin = true` とすると処理の際に使われる。※デフォルトTrue
     - 
+# 7.4 SparkUIを調べる
+- SparkUIにはメモリ使用量，Job，Stage，Taskの詳細など様々な情報をもっている。
+- `spark-submit job`でSparkUIが起動し，ローカルホストまたはSparkDriveのデフォルトポート4040に接続すると閲覧できる。
+## 7.4.1 SparkUIを巡る旅
+- JobとStage
+  - 
