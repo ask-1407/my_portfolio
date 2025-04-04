@@ -188,4 +188,6 @@ Sparkでリソースの枯渇やパフォーマンスの低下によるジョブ
 - `spark-submit job`でSparkUIが起動し，ローカルホストまたはSparkDriveのデフォルトポート4040に接続すると閲覧できる。
 ## 7.4.1 SparkUIを巡る旅
 - JobとStage
+  - ここでは個々のTaskの詳細(完了状況の確認・I/O・メモリ消費量)を確認することができる
   - 
+![SparkUI](SparkUI.png)
