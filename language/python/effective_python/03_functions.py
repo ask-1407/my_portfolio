@@ -323,3 +323,71 @@ def flow_rate(weight_diff, time_diff, period=1):
 # 変更後：unit_per_kg引数を追加
 def flow_rate(weight_diff, time_diff, period=1, unit_per_kg = 1):
     return(weight_diff*unit_per_kg) / time_diff * period
+
+
+# 項目24 動的なデフォルト引数を使うときはNoneとDocStringsを使う
+"""
+デフォルト引数は一度（モジュール読み込み時の関数定義のとき）しか評価されない。これによってdatetime.now()のような動的な値が奇妙な振る舞いをすることがある
+動的な値を持つキーワード引数のデフォルト値にはNoneを利用し、実際のふるまいを関数のDocStringsnに記述しておく。
+キーワード引数のデフォルト値を表すためにNoneを仕様しても型ヒントで正しく動作する。
+"""
+
+# bad：関数が呼ばれた時刻をデフォルトで追加すると期待通りに動作しない。
+from time import sleep
+from datetime import datetime
+
+def log(message, when=datetime.now()):
+    print(f'{when}: message')
+
+log('Hi there')
+sleep(0.1)
+log('Hi again!')
+
+# >>>
+# 1990-01-01 00:00::00.123456 Hi there!
+# 1990-01-01 00:00::00.123456 Hi again! #　デフォルト引数はモジュールの読み込み時にしか評価されない
+
+
+# good: デフォルト値をNoneとして、Docstringsに実際の振る舞いを記述。
+def log(message, when=None):
+    """Log a message with a timestamp.
+
+    Args:
+        message: Message to print.
+        when: datetime of when the message occured.
+            Defauls to the present time.
+    """
+    if when is None:
+        when = datetime.now()
+    print(f'{when}: message')
+
+log('Hi there')
+sleep(0.1)
+log('Hi again!')
+
+# >>>
+# 1990-01-01 00:00::00.123456 Hi there!
+# 1990-01-01 00:00::00.789012 Hi again!
+
+
+# デフォルト引数値にNoneを使うことは引数が変更可能な場合には特に重要となる。
+
+# Foo/Barどちらも同じ辞書オブジェクトで共有されてしまう。
+import json
+def decode(data, default={}):
+    try:
+        return json.loads(data)
+    except ValueError:
+        return default
+
+foo = decode('bad data')
+foo['stuff'] = 5
+bar = decode('also bad')
+bar['meep'] = 1
+print('Foo:', foo) 
+print('Bar:', bar) 
+
+# >>> 
+# Foo: {stuff: 5, 'meep': 1}
+# Bar: {stuff: 5, 'meep': 1}
+
