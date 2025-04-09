@@ -87,3 +87,9 @@ response = client.chat.completions.create(
 
 print(response.choices[0].message.content)
 # >>> 画像はxxxで....
+
+# 2.6 Function Calling
+"""
+- 利用可能な関数とLLMに伝えておいてLLMに関数を使いたいという判断を指せる機能
+- LLMが関数を実行するわけではない
+"""
