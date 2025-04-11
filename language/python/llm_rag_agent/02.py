@@ -180,3 +180,5 @@ print(response.to_json(indent=2))
 }
 
 """
+
+# tool_callsという要素にget_current_weatherという関数に対し引数はargumentsの値で実行したいという内容を返している。
