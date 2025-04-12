@@ -183,3 +183,4 @@ print(response.to_json(indent=2))
 
 # パラメータtool_choiceを使うとLLMは関数を呼び出すような応答をせず，通常のテキストを返す。
 # デフォルトはtoolsを与えなかった場合はnone，toolsを与えた場合はautoとなる
+# Structured Outputs機能をつかうと指定したJSON Schemaでの出力を保証する
