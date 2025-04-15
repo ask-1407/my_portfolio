@@ -22,3 +22,9 @@ def generate_recipt(dish: str) -> str:
 
 recipe = generate_recipt("カレー")
 print(recipe)
+
+# 入力データと命令は独立指せるのが望ましい。「"""」や「###」で区切るととも多い。
+
+# 前提条件や外部情報などを文脈(context)として与えるとそれに従った回答を得ることができる。
+
+
