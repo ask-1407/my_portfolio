@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import TodoList from "./TodoList";
+import {v4 as uuidv4 } from "uuid";
 
 function App() {
   const [todos, setTodos] = useState([
@@ -14,18 +15,31 @@ function App() {
     
     //これがTodosの更新を担う。
     setTodos((prevTodos)=> {
-      return [...prevTodos, {id: "1", name: name, completed: false}]; //前のタスクに対し新しいタスクオブジェクトを追加
-    })
+      return [...prevTodos, {id: uuidv4(), name: name, completed: false}]; //前のタスクに対し新しいタスクオブジェクトを追加
+    }) //タスクに対しUnique IDを割り振っている
     todoNameRef.current.value=null;
   };
 
+  const toggleTodo = (id) => {
+    const newTodos = [...todos]; // todosを浅いコピー
+    const todo = newTodos.find((todo) => todo.id === id); //toggleTodoの引数idを一致しているオブジェクトをtodoに入れ込む。
+    todo.completed = !todo.completed;
+  };
+
+  const handleClear = () => {
+    const newTodos = todos.filter((todo) => !todo.completed);
+    setTodos(newTodos);
+
+  };
+
+
   return (
     <div>
-      <TodoList todos={todos} />
+      <TodoList todos={todos} toggleTodo={toggleTodo} />
       <input type = "text" ref = {todoNameRef}/>
       <button onClick={handleAddTodo}>タスクを追加</button>
-      <button>完了したタスクの削除</button>
-      <div>残りのタスク:0</div>
+      <button onClick={handleClear}>完了したタスクの削除</button>
+      <div>残りのタスク:{todos.filter((todo) => !todo.completed).length}</div>
     </div>
   );
 }
