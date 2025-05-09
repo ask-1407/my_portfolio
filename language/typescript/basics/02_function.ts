@@ -39,3 +39,42 @@ const オブジェクト = {
     メソッド名: function () {},
   };
 
+
+/*
+アロー関数: JavaScriptの関数を作る方法
+- 関数式・関数宣言がもともとあったのに後発として加えられた。
+- 機能上の違いはほぼないが，構文の簡潔するために実装された。
+*/
+
+// 書き方は以下の通り。
+(引数) => {
+    // 処理内容
+  };
+
+// 関数式
+const increment = function (n) {
+    return n + 1;
+};
+
+// アロー関数
+const increment = (n) => {
+    return n + 1;
+  };
+
+
+// 引数が一つなら引数のカッコが省略できる。
+const increment = n => {/**/};
+// 
+
+//型注釈をつけた場合は以下。
+const increment = (num: number) => num + 1;
+//                    ^^^^^^^^引数の型注釈
+
+const increment = (num: number): number => num + 1; // 返り値に着けた場合。
+
+// 従来の関数(関数式)
+[1, 2, 3].map(function (n) {
+    return n + 1;
+  });
+// アロー関数
+[1, 2, 3].map((n) => n + 1);
