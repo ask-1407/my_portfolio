@@ -78,3 +78,22 @@ const increment = (num: number): number => num + 1; // 返り値に着けた場�
   });
 // アロー関数
 [1, 2, 3].map((n) => n + 1);
+
+/*
+オプション引数：渡す引数を省略する。TypeScript固有の機能。
+- オプション引数の型は型とundefinedのユニオン型となる。
+- T | undefined型の引数は引数が省略できないが，オプション引数であれば省略が可能。
+- オプション引数の後に普通の引数はかけない。
+*/
+
+//書き方
+function 関数名(引数名?: 型) {}
+//                  ^オプション引数の標示
+
+// プション引数を使用する際には、undefined である可能性を考慮した処理を書く必要がある。
+function hello(person?: string) {
+    if (typeof person === "undefined") { // if文でデフォルト値を入れ込む。※こういうパターンならデフォルト引数を使ったほうが早い。
+      person = "anonymous";
+    }
+    return "Hello " + person.toUpperCase();
+  }
