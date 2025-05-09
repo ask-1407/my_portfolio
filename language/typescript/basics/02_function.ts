@@ -128,3 +128,20 @@ foo(null); // => null
 // TypeScriptではデフォルト引数があると引数の型推論が効く。
 function foo(x = 1) {}
 //           ^ (parameter) x: number
+
+/*
+残余引数：引数の個数が決まっていない引数のこと。いわゆる可変長引数。
+*/
+
+// 構文
+function func(...params: number[]) {
+    // ...
+}
+
+/*
+配列を残余引数に渡す。
+- 残余引数、引数受取時には配列になりますが、関数呼び出しのときにひとつの配列にまとめて渡すことはできません。
+- 配列を余剰引数に渡す場合は、スプレッド構文(spread syntax)を用います。
+*/ 
+const scores: number[] = [1, 2, 3, 4, 5];
+const highest = Math.max(...scores) // => 5
