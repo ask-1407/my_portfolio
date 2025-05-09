@@ -21,3 +21,21 @@ function getFirst(items: number[]){
 
 getFirst([1, 2, 3]); //function getFirst(items: number[]): number | null
 
+// 関数式の構文: 変数に関数を代入する
+const increment = function (n: number) {
+    //                         ^^^^^^^^引数の型注釈. 省略するとany型になる
+    return n + 1;
+  };
+
+
+// 戻り値の注釈も書ける。
+const getZero = function (): number {
+    //                         ^^^^^^戻り値の型注釈
+    return 0;
+  };
+  
+// 関数式をオブジェクトのプロパティに代入することもできる。
+const オブジェクト = {
+    メソッド名: function () {},
+  };
+
