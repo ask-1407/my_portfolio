@@ -159,6 +159,78 @@ const america: Continent = {
 ‐ 初期値による推論: 変数の宣言時に明らかな初期値が代入されている場合、その初期値の型から変数の型を推論できる。
 ‐ 関数の戻り値：関数内で return される値の型から、関数の戻り値の型を推論できる。
 ― 構造的な型推論： TypeScriptはオブジェクトの構造に基づいて型を推論する能力を持っているためインターフェースや型エイリアスを明示的に宣言しなくても、オブジェクトの形状から型を推論できる
+
+[型推論と動的型づけの違い]
+‐ 型推論：コンパイルのタイミングで型が決定される。その後変更されることはない。
+‐ 動的型付け：実行時に型が決まる。ゆえに実行タイミングにより方が変化する。
 */
 let x = 1; // let x: number = 1;と同じ意味になる
 x = "hello"; // Type 'string' is not assignable to type 'number'.
+
+
+// データ型：プリミティブ型とオブジェクトの二つに分類される。
+
+/*
+[プリミティブ型の特徴]
+- Immutable
+- プロパティをもたない
+*/
+
+null.toString(); // Error
+"name".length; // 4. プリミティブ型をオブジェクトのように扱える(auto boxing)のはJavaScriptの特徴。
+
+// boolean: trueかfalse ※大文字で始まるBoolean型があるがbooleanとは別の型。
+const isOk = true; 
+const isPandas = false;
+const isOk: boolean = true; // 型推論
+
+// number: 整数や少数などの数値。JavaScriptでは整数と少数を型レベルで区別しない。
+
+100_000_000 // 一億。アンスコで数字を区切ることができる。
+
+5.toString(); //小数点と区別できないので構文エラーとなる。以下２通りで実現可能。
+5..toString(); 
+(5).toString();
+
+const count: number = 123; //型推論
+
+//NanとInfinityはnumber型
+
+/*
+NanとInfinityはnumber型
+- Nan：非数(not-a-number)を表す。JavaScriptでは、処理の結果、数値にならない場合にNaNを返すことがある
+- Infinity：無限大。1を0で割るとこの値を返す。
+*/
+const price = parseInt("百円");
+console.log(price); // NaN
+
+// 値がNaNであるかどうかはNumber.isNaNを利用する。
+if (Number.isNaN(price)) {
+  console.log("数値化できません");
+}
+
+// string: クォートの如何に関わらず文字列となる。PHPと同様。
+"Hello";
+'Hello';
+`Hello`;
+
+// 文字列中に同じ引用符が含まれている場合はバックスラッシュでエスケープする。
+'He said "madam, I\'m Adam."'
+"He said \"madam, I'm Adam.\""
+
+// バッククォートで囲ったものは式や変数を埋め込むことができる。
+const count = 10;
+console.log(`現在、${count}名が見ています。`);
+`税込み${Math.floor(100 * 1.1)}円`
+
+/*
+[使い分け]
+- 基本的に"を使用する
+- 文字列の中に"が含まれる場合は'を使用する
+- 文字列展開する必要があるときは`を使用する
+*/
+
+// 型推論
+const message: string = "Hello"
+
+
