@@ -145,3 +145,46 @@ function func(...params: number[]) {
 */ 
 const scores: number[] = [1, 2, 3, 4, 5];
 const highest = Math.max(...scores) // => 5
+
+/*
+this引数
+- アロー関数以外の関数とクラスのメソッドの第一引数は特殊な引数"this"を受けることができる。
+- Python の self に近い概念
+*/ 
+
+class Male{
+    private name: string;
+
+    public constructor(name: string) {
+        this.name = name;
+    }
+
+    public toString(); string {
+        return `Monsieur ${this.name}`;
+    }
+};
+
+class Female {
+    private name: string;
+
+    public constructor(name: string) {
+        this.name = name;
+    }
+    public toString(this: Female): string{
+        return `Madame &{this.name}`
+    }
+};
+
+// どちらも普通の用途は同じように使える。
+const male: Male = new Male("Taro");
+const female: Female = new Female("Hanako");
+
+male.toString(); // Monsieur Taro
+female.toString(); // Madame Hanako
+
+// インスタンスのtoString()を変数に代入すると意味が変わる。
+const maleToStr: () => string = male.toString;
+const femaleToStr: (this: Female) => string = female.toString;
+ 
+maleToStr();
+femaleToStr(); // The 'this' context of type 'void' is not assignable to method's 'this' of type 'Female'.
