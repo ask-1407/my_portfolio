@@ -97,3 +97,34 @@ function hello(person?: string) {
     }
     return "Hello " + person.toUpperCase();
   }
+
+/*
+デフォルト引数: 引数の値がundefinedのとき、代わりの値を指定できる
+・JavaScriptのデフォルト引数は引数がundefinedのとき使われる値
+・構文: function 関数名(引数: 型 = デフォルト値) {}
+・nullのときはデフォルト値にならない
+・引数の途中に書ける
+・簡単な初期化処理も書ける
+・TypeScriptでは型推論が効く
+*/ 
+
+// 構文
+function 関数名(引数: 型 = デフォルト値) {}
+// アロー関数
+(引数: 型 = デフォルト値) => {};
+
+// 次の例では引数xがundefinedで，デフォルト値は1が入る。
+function foo(x = 1) {
+    console.log(x);
+  }
+foo(); // => 1
+
+// 引数にundefinedを渡す場合もデフォルト値が代入される。
+foo(undefined); // => 1
+
+// 引数がnullのときはデフォルト引数は適用されない。
+foo(null); // => null
+
+// TypeScriptではデフォルト引数があると引数の型推論が効く。
+function foo(x = 1) {}
+//           ^ (parameter) x: number
