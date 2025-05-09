@@ -240,3 +240,34 @@ const message: string = "Hello"
 */ 
 "1" - 1; //=> 0
 "1" + 1; //=> "11"
+
+/*
+[ボックス化]
+- プリミティブをオブジェクトへ変換しオブジェクトのように扱う操作のこと
+- JavaScriptでは、プリミティブ型の値でもフィールドを参照できたり、メソッドが呼び出せます。
+- 自動Box化で変換先となるオブジェクトのことを"ラッパーオブジェクト"とよぶ。
+- TypeScriptではラッパーオブジェクト(例:String)よりもプリミティブ型(例:string)で型注釈すべし
+*/ 
+const str = "abc";
+// オブジェクトのように扱う
+str.length; // フィールドの参照
+str.toUpperCase(); // メソッド呼び出し
+
+// TypeScriptではラッパーオブジェクトの型をつかって型注釈をかける。プリミティブ型を代入することもできる。
+const bool: Boolean = false;
+const num: Number = 0;
+const str: String = "";
+const sym: Symbol = Symbol();
+const big: BigInt = 10n;
+
+// プリミティブ型にラッパーオブジェクトを代入することはできない。
+const n1: Number = 0;
+const n2: number = n1;
+
+// ラッパーオブジェクト型は演算子が使えない
+const num: Number = 1;
+num * 2;
+
+// ラッパーオブジェクト型を型注釈に使う利点はありません。型注釈にはプリミティブ型を使う。
+const num1: Number = 0;// anti pattern
+const num2: number = 0;// good
