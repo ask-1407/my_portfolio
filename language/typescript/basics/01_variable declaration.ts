@@ -271,3 +271,51 @@ num * 2;
 // ラッパーオブジェクト型を型注釈に使う利点はありません。型注釈にはプリミティブ型を使う。
 const num1: Number = 0;// anti pattern
 const num2: number = 0;// good
+
+/*
+any
+・any型はどんな型でも代入を許す
+・any型は型チェックされない
+・型推論できない変数は暗黙的にany型になる
+・anyは使いようによっては悪くない
+・がんばらないTypeScriptという考え方もある
+*/ 
+
+// anyで宣言された変数はどんな型でも許容する。
+let value: any;
+value = 1; // OK
+value = "string"; // OK
+value = {name: "オブジェクト"}// OK
+
+// anyはコンパイラが型チェックを行わないので実行時のエラーを指摘しない。
+const str: any = 123;
+str.toLowerCase(); // TypeError: str.toLowerCase is not a function
+
+// tsconfig.json にて noImplicitAny: true を設定することで、TypeScriptが型をany型と推測した場合にエラーが発生するようになる。
+function hello(name) {  //Parameter 'name' implicitly has an 'any' type.
+  console.log(`Hello, ${name.toUpperCase()}`);
+}
+
+/*
+any型を濫用すると型チェックが弱くなりバグの発見できなくなる恐れがある。
+理由なくanyを使うのは問題ですが、どうしてもanyを使わないとならない場面や、型安全性を妥協した上で、まずは動くコードを形にすることを優先するといったこともありえます。
+anyをどこまで許容するか、型チェックをどこまで厳格にするかは、チームの熟練度やプロジェクトの方針によるところが大きいです。
+*/
+
+//unknown型：型が何かわからないときに使う。APIレスポンスの型が不明だがとりあえず実装⇒わかったら適切な型に変えるのがまるそう。
+//そのままだと使えないのでtypeofやinstanceofなどの条件式に含んだif文を使う。(型ガードと呼称)
+const value: unknown = "";
+if (typeof value === "string"){ // valueがstring型ならstring型のメソッドtoUpperCase()を使う
+  console.log(value.toUpperCase());
+}
+
+// 型ガード関数を使う方法もある
+function isObject(value: unknown): value is object {
+  return typeof value === "object" && value !== null;
+}
+const value: unknown = { a: 1, b: 2 };
+// 型ガード
+if (isObject(value)) {
+  // ここでは、valueをobject型として扱える
+  console.log(Object.keys(value));
+}
