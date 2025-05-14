@@ -39,3 +39,18 @@ a(); // => 100
     console.log(x); // => 100
 }
 console.log(x); // 参照できない。ReferenceError: x is not defined
+
+// if-else
+
+let result;
+if (value === 0) {
+  result = "OK";
+} else {
+  result = "NG";
+}
+
+// 式で条件分岐を使いたいときは三項演算子を使う
+const result = value === 0 ? "OK" : "NG"; // valueが0ならOK、そうでなければNG
+
+// こういう書き方はできない
+const result = if (value === 0) "OK" : "NG";
