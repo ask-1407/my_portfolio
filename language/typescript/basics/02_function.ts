@@ -258,3 +258,27 @@ fs.readFile("a.txt", "utf-8")
   .then( (data) => fs.readFile(data, "utf-8"))
   .then( (data) => fs.readFile(data, "utf-8"))
   .then( (data) => console.log(data));
+
+/*
+コールバック関数には同期型と非同期型が存在します。
+- 同期型：親の関数が処理を完了するまでの間に、その場で順番に実行される
+- 非同期型：親の関数が処理を開始した後、すぐに完了するとは限らない処理の結果を受け取るために使われる
+*/ 
+
+// 同期型の例
+const numbers = [1,2,3];
+const doubles = numbers.map((n: number)=>{
+  return n*2;
+});
+console.log(doubles); // [2, 4, 6]
+
+
+// 非同期型の例
+setTimeout(() => {
+  console.log("This is a callback function!");
+} , 1000);
+
+console.log("hello");
+// hello 
+// This is a callback function!
+
