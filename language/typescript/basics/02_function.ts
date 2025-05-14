@@ -207,3 +207,54 @@ if (isDuck(animal)) {
   animal.quacks(); // OK
 }
 
+/*
+[コールバック関数]
+- 関数の引数として渡される関数のこと。設計パターンの一つ。
+- 関数の中で引数で指定した関数を呼び出す（コールバックする）ことで関数の振る舞いを制御したり、非同期な結果を受け取ることができます。
+*/ 
+
+// 例：greetNewUserはhello関数とgoodMorning関数をいそれぞれコールバック関数として渡すことで挨拶の内容を変える。
+function greetNewUser(func: (name: string) => string) {
+  console.log(func("ご新規"));
+}
+
+function hello(name: string){
+  return "こんにちは! ${name}さん";
+}
+
+function goodMorning(name: string){
+  return "おはようございます！${name}さん";
+}
+
+greetNewUser(hello);
+greetNewUser(goodMorning);
+
+// 非同期処理でもコールバック関数は利用される。
+// 例：Node.jsのfsモジュールのファイル読み込みのサンプルコード
+import fs from "fs";
+ 
+fs.readFile("./user.txt", "utf-8", (err, data) => {
+  if (err) {
+    console.error(err);
+  }
+  console.log(data);
+});
+
+// コールバック関数地獄：ネストが深くなり可読性が低下する問題のこと. 
+// 非同期的にファイルを3回連続で読み込む処理
+import fs from "fs";
+ 
+fs.readFile("./a.txt", "utf-8", (err, data) => {
+  fs.readFile(data, "utf-8", (err, data) => {
+    fs.readFile(data, (err, data) => {
+      console.log(data);
+    });
+  });
+});
+
+// Promiseを利用することで解消可能。
+import { promises as fs} from "fs";
+fs.readFile("a.txt", "utf-8")
+  .then( (data) => fs.readFile(data, "utf-8"))
+  .then( (data) => fs.readFile(data, "utf-8"))
+  .then( (data) => console.log(data));
