@@ -196,7 +196,7 @@ femaleToStr(); // The 'this' context of type 'void' is not assignable to method'
 - typeof や instanceof がTypeScriptが提供する型ガードだが、ユーザーで定義することもできる。
 */ 
 
-// ユーザー定義の型ガード関数では型述語(型の性質や関係性を表明したり、検査したりするための仕組み)を使用する。
+// ユーザー定義の型ガード関数では型述語(Type predicate：型の性質や関係性を表明したり、検査したりするための仕組み)を使用する。
 function isDuck(animal: Animal): animal is Duck { // animal is Duckが型述語。戻り値がboolean型の関数に対して適用できる。
     return animal instanceof Duck;
 }
@@ -282,3 +282,23 @@ console.log("hello");
 // hello 
 // This is a callback function!
 
+/*
+アサーション関数
+- 目的は型ガード関数と似ている。より直接的に"この型である"ということを明示する。
+*/ 
+
+// isDuck()をアサーション関数に書き換えた例
+function isDuck(animal: Animal): asserts animal is Duck {
+  if (walksLikeDuck(animal)) {  
+    if (quacksLikeDuck(animal)) {
+      return;
+    }
+  }
+
+  throw new Error("YOU ARE A FROG!")
+}
+
+animal.quacks(); // ここではquacks()は存在しない。Property 'quacks' does not exist on type 'Animal'.
+
+isDuck(animal);
+animal.quacks();
