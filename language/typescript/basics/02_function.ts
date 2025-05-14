@@ -188,3 +188,22 @@ const femaleToStr: (this: Female) => string = female.toString;
  
 maleToStr();
 femaleToStr(); // The 'this' context of type 'void' is not assignable to method's 'this' of type 'Female'.
+
+/*
+[型ガード関数]
+- ある変数が特定の型であることをコンパイラに明示的に伝えることができ、型に関するエラーを未然に防ぐことができます。
+- これにより、より安全で信頼性の高いコードを書くことができるようになります。
+- typeof や instanceof がTypeScriptが提供する型ガードだが、ユーザーで定義することもできる。
+*/ 
+
+// ユーザー定義の型ガード関数では型述語(型の性質や関係性を表明したり、検査したりするための仕組み)を使用する。
+function isDuck(animal: Animal): animal is Duck { // animal is Duckが型述語。戻り値がboolean型の関数に対して適用できる。
+    return animal instanceof Duck;
+}
+
+animal.quacks(); // ここではquacks()は存在しない。Property 'quacks' does not exist on type 'Animal'.
+
+if (isDuck(animal)) {
+  animal.quacks(); // OK
+}
+
