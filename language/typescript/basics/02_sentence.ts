@@ -54,3 +54,33 @@ const result = value === 0 ? "OK" : "NG"; // valueが0ならOK、そうでなけ
 
 // こういう書き方はできない
 const result = if (value === 0) "OK" : "NG";
+
+/*
+for-of, 拡張for: 構文はPythonのfor inに似ている
+*/ 
+const numbers = [1, 2, 3];
+for (const n of numbers) {
+  console.log(n);
+}
+
+// for-ofでインデックスを取得するにはentriesメソッドを使う。
+const words = ["apple", "banana", "orange"];
+for (const [index, word] of words.entries()) {
+  console.log(index, word)
+}
+
+// breakで中断、continueで次のループにスキップする
+const arr = ["1","2","3"];
+for (let i = 0; i < arr.length; i++) {
+  if (arr[i] === "a") {
+    continue;
+  
+  if (arr[i] === "b") {}
+   break;
+  }
+  console.log(arr[i])
+}
+
+
+
+// for-inは順番通りなる保証がないため利用しない。
