@@ -43,3 +43,33 @@ class Greeter {
         return "Hello, ${name}";
     }
 }
+
+/*
+アクセス修飾子
+- 宣言なし:　publicと同等
+- public: どこからでもアクセスできる
+- protected: 自身のクラスとサブクラスからアクセス可能
+- private: 自身のクラスのみアクセス可能
+
+クラスの継承時にメソッドのアクセス修飾子を変更できる。ただしアクセス制限を緩める方向のみ。
+*/ 
+
+//　継承: extendsキーワードを用いてクラスの継承ができる。
+class Parent{}
+class Child extends Parent{
+    constructor() {
+        super();　//スーパークラスのコンストラクタを呼び出す
+    }
+}
+
+
+// インターフェース: 構造の型を定義する。そのままだと実装の詳細をもたない。
+interface SomeInterface {
+    method1(): void;
+    method2(): void;
+}
+
+// パブリックフィールドも定義できる
+interface SomeInterface {
+    field: string;
+}
