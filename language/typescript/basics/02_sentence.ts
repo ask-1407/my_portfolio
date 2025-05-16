@@ -81,6 +81,26 @@ for (let i = 0; i < arr.length; i++) {
   console.log(arr[i])
 }
 
-
-
 // for-inは順番通りなる保証がないため利用しない。
+
+/*
+switch文
+- if文のように条件分岐が可能
+- 厳密等価演算(===)を実行するｔのでnullやundefinedは等しくならない。
+- breakを書かなくても次のcaseに進むがバグになる可能性があるので書くこと。
+*/ 
+let num = 2;
+switch (num) {
+  case 1:
+    console.log("a");
+    break;
+  case 2:
+    console.log("b");
+    break;
+  case 3:
+    console.log("c");
+    break;
+  case 4:
+    console.log("d");
+    break;
+}
