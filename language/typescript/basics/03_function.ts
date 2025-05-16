@@ -21,7 +21,7 @@ function getFirst(items: number[]){
 
 getFirst([1, 2, 3]); //function getFirst(items: number[]): number | null
 
-// 関数式の構文: 変数に関数を代入する
+// 関数式の構文: 変数に関数を代入する. 無名関数、関数リテラルなどと呼ばれる。
 const increment = function (n: number) {
     //                         ^^^^^^^^引数の型注釈. 省略するとany型になる
     return n + 1;
