@@ -391,3 +391,39 @@ print('Bar:', bar)
 # Foo: {stuff: 5, 'meep': 1}
 # Bar: {stuff: 5, 'meep': 1}
 
+# 項目25　キーワード専用引と一専用引数で明確さを高める。
+
+"""
+- キーワード専用引数を用いると、呼び出し元にキーワード引数を与えるように強制できるため関数呼び出しの意図が明確になる。
+- 引数リストの一つの*の後として定義される。
+- 位置専用引数では呼び出し元はキーワードを使って渡せないので引数名への依存性が減らせる。
+"""
+
+# 割り算を行う関数はこんな感じで宣言するとよい。
+def safe_division(number, divisor, *, ignore_overflow=False, ignore_zero_division=False):
+    try:
+        return number / divisor
+    except OverflowError:
+        if ignore_overflow:
+            return 0
+        else:
+            raise
+    except ZeroDivisionError:
+        if ignore_zero_division:
+            return float('inf')
+        else:
+            raise
+# 呼び出し元はキーワード引数を使って特定の除算に対するどの例外フラグを無視するかをデフォルトの振る舞いをオーバーライドして指定できる
+
+result = safe_division(1.0, 10**500, ignore_overflow=True)
+print(result) # 0
+
+result = safe_division(1.0, 0.0, ignore_zero_division=True)
+print(result) # inf
+
+# ただしキーワード引数はオプションであるため関数の呼び出しもとに明確化のためのキーワード引数の仕様を強制できない。
+# そんなときは、引数リストの"*"記号を用いる。これにより位置引数の終わりとキーワード引数の始まりを示すことができる。
+# 位置専用引数の終わりは "/"記号で示せる。
+
+def safe_division_d(number, divisor, /, *, ignore_overflow=False, ignore_zero_division=False):
+    pass
