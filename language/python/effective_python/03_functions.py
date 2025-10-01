@@ -427,3 +427,26 @@ print(result) # inf
 
 def safe_division_d(number, divisor, /, *, ignore_overflow=False, ignore_zero_division=False):
     pass
+
+# 項目26 functools.wrapsを使って関数デコレータを定義
+"""
+デコレータはラップする関数への呼び出しの前後で追加コードを実行できる。
+これによって入力の引数やも戻り値にアクセスして値を変更したり、例外を送出できる。
+"""
+
+# 以下の用鬼、関数呼び出しの引数と戻り値を出力する関数を作成する」
+def trace(func):
+    def wrapper(*args, **kwargs):
+        print(f'Calling {func.__name__} with {args}, {kwargs}')
+        result = func(*args, **kwargs)
+        print(f'{func.__name__} returned {result}')
+        return result
+    return wrapper
+
+# このデコレータを@記号を用いて関数に適用できる
+@trace # trace(fibonacci)と同じ意味
+def fibonacci(n):
+    if n in (0,1):
+        return n
+    return fibonacci(n-2) + fibonacci(n-1)
+
